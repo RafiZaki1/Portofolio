@@ -120,101 +120,97 @@
         </div>
       </section>
 
+    <!-- ===== Deck: setiap .page adalah satu slide layar penuh, berurutan seperti presentasi ===== -->
     <div class="deck">
-      <!-- ===== Perkenalan + daftar isi, tepat di bawah sampul ===== -->
-      <div class="deck-side">
-        <aside class="slide page intro" aria-labelledby="introTitle" data-reveal>
-          <div class="intro-photo"><img src="assets/foto-kasual.png" alt="" width="760" height="1140" loading="lazy" decoding="async"></div>
-          <div class="intro-body">
-            <h2 class="slide-title sm" id="introTitle">Introduction</h2>
-            <dl class="facts">
-              <div><dt>Kontak</dt><dd id="introContact"></dd></div>
-              <div><dt>Pendidikan</dt><dd id="introEdu"></dd></div>
-              <div><dt>Pengalaman</dt><dd><span id="heroOrg">PT Humma Teknologi Indonesia</span><br>Magang 6 bulan</dd></div>
-            </dl>
-          </div>
-        </aside>
 
-        <nav class="slide page toc" aria-labelledby="tocTitle" data-reveal style="--i:1">
-          <h2 class="slide-title" id="tocTitle">Content</h2>
-          <ol class="toc-list" id="tocList"></ol>
-        </nav>
-      </div>
+      <!-- Introduction -->
+      <aside class="slide page intro" aria-labelledby="introTitle">
+        <svg class="orn-spark sp-1" aria-hidden="true"><use href="#o-spark"/></svg>
+        <div class="intro-photo" data-reveal><img src="assets/foto-kasual.png" alt="" width="760" height="1140" loading="lazy" decoding="async"></div>
+        <div class="intro-body">
+          <h2 class="slide-title xl" id="introTitle" data-reveal>Introduction</h2>
+          <p class="intro-lead" data-reveal style="--i:1">Halo, saya Rafi. Backend developer dari Mojokerto yang suka membangun sistem rapi di balik layar.</p>
+          <dl class="facts" data-reveal style="--i:2">
+            <div><dt>Kontak</dt><dd id="introContact"></dd></div>
+            <div><dt>Pendidikan</dt><dd id="introEdu"></dd></div>
+            <div><dt>Pengalaman</dt><dd><span id="heroOrg">PT Humma Teknologi Indonesia</span><br>Magang 6 bulan</dd></div>
+          </dl>
+        </div>
+      </aside>
 
-    <!-- ===== Isi deck: kolase slide 12 kolom. Setiap .page dapat tanda potong + nomor halaman ===== -->
-    <div class="deck-grid">
+      <!-- Content: daftar isi -->
+      <nav class="slide page toc" aria-labelledby="tocTitle">
+        <i class="orn-dots d-1" aria-hidden="true"></i>
+        <i class="orn-dots d-2" aria-hidden="true"></i>
+        <h2 class="slide-title xxl" id="tocTitle" data-reveal>Content</h2>
+        <ol class="toc-list" id="tocList" data-reveal style="--i:1"></ol>
+      </nav>
 
       <!-- Tentang + angka -->
-      <section id="tentang" class="slide page sec span-8 about">
-        <figure class="polaroid" data-reveal>
-          <i class="tape tape-l" aria-hidden="true"></i><i class="tape tape-r" aria-hidden="true"></i>
-          <div class="polaroid-img"><img src="assets/foto-about.png" alt="Muhamad Rafi Zaki berjaket krem dan kaos putih, bersedekap sambil tersenyum" width="877" height="999" loading="lazy" decoding="async"></div>
-          <figcaption>Siap belajar, siap kerja sama</figcaption>
-        </figure>
-        <div class="about-body">
-          <header class="sec-head" data-reveal><span class="eyebrow">Perkenalan</span><h2 class="slide-title">About Me</h2></header>
-          <p class="lead-lg" data-reveal>Backend developer yang berfokus pada <strong>logika, data, dan API</strong> yang stabil serta mudah dikembangkan.</p>
-          <div class="about-text" data-reveal style="--i:1">
-            <p>Saya mendalami <strong>Laravel</strong> lewat pelatihan di Minarsih Tech, lalu mengasahnya lewat <strong>magang 6 bulan</strong> di PT Humma Teknologi Indonesia pada project GetSkill, dengan Laravel dan Spring Boot. Saya juga terus belajar <strong>TypeScript, React, dan CSS</strong> supaya memahami produk secara utuh, dari server sampai tampilan.</p>
-            <p>Saya pernah mengerjakan project sekolah dari nol sampai jadi sebagai <strong>fullstack developer</strong>: merancang fitur, bekerja dalam tim, dan menyelesaikan masalah teknis sampai tuntas.</p>
-            <p>Saat ini saya siswa kelas 12 RPL di SMKN 2 Mojokerto yang sedang mencari kesempatan kerja di bidang teknologi.</p>
-          </div>
-          <div class="pills" id="aboutPills" data-reveal style="--i:2"></div>
-          <div class="cv-actions" data-reveal style="--i:3">
-            <button class="btn ghost sm" type="button" data-open-cv><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg>Lihat CV</button>
-            <a class="btn primary sm" href="assets/CV-Rafi-Zaki.pdf" download><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Unduh PDF</a>
+      <section id="tentang" class="slide page sec about-slide">
+        <div class="about">
+          <figure class="polaroid" data-reveal>
+            <i class="tape tape-l" aria-hidden="true"></i><i class="tape tape-r" aria-hidden="true"></i>
+            <div class="polaroid-img"><img src="assets/foto-about.png" alt="Muhamad Rafi Zaki berjaket krem dan kaos putih, bersedekap sambil tersenyum" width="877" height="999" loading="lazy" decoding="async"></div>
+            <figcaption>Siap belajar, siap kerja sama</figcaption>
+          </figure>
+          <div class="about-body">
+            <header class="sec-head" data-reveal><span class="eyebrow">Perkenalan</span><h2 class="slide-title">About Me</h2></header>
+            <p class="lead-lg" data-reveal>Backend developer yang berfokus pada <strong>logika, data, dan API</strong> yang stabil serta mudah dikembangkan.</p>
+            <div class="about-text" data-reveal style="--i:1">
+              <p>Saya mendalami <strong>Laravel</strong> lewat pelatihan di Minarsih Tech, lalu mengasahnya lewat <strong>magang 6 bulan</strong> di PT Humma Teknologi Indonesia pada project GetSkill, dengan Laravel dan Spring Boot. Saya juga terus belajar <strong>TypeScript, React, dan CSS</strong> supaya memahami produk secara utuh, dari server sampai tampilan.</p>
+              <p>Saya pernah mengerjakan project sekolah dari nol sampai jadi sebagai <strong>fullstack developer</strong>: merancang fitur, bekerja dalam tim, dan menyelesaikan masalah teknis sampai tuntas.</p>
+              <p>Saat ini saya siswa kelas 12 RPL di SMKN 2 Mojokerto yang sedang mencari kesempatan kerja di bidang teknologi.</p>
+            </div>
+            <div class="pills" id="aboutPills" data-reveal style="--i:2"></div>
+            <div class="cv-actions" data-reveal style="--i:3">
+              <button class="btn ghost sm" type="button" data-open-cv><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg>Lihat CV</button>
+              <a class="btn primary sm" href="assets/CV-Rafi-Zaki.pdf" download><svg class="ic" aria-hidden="true"><use href="#i-download"/></svg>Unduh PDF</a>
+            </div>
           </div>
         </div>
-      </section>
-
-      <aside class="slide page span-4 numbers" aria-labelledby="numTitle">
-        <svg class="orn-spark sp-a" aria-hidden="true"><use href="#o-spark"/></svg>
-        <h3 class="slide-title sm" id="numTitle" data-reveal>In Numbers</h3>
-        <div class="stats">
+        <div class="stats" aria-label="Dalam angka">
           <div class="stat" data-reveal style="--i:0"><b><span data-count="6">6</span><small>bln</small></b><span class="lbl">Magang di PT Humma Teknologi</span></div>
           <div class="stat" data-reveal style="--i:1"><b><span id="statRepo">–</span></b><span class="lbl">Repo publik di GitHub</span></div>
           <div class="stat" data-reveal style="--i:2"><b><span data-count="2">2</span></b><span class="lbl">Framework backend</span></div>
           <div class="stat" data-reveal style="--i:3"><b><span data-count="12">12</span></b><span class="lbl">Kelas RPL, SMKN 2 Mojokerto</span></div>
         </div>
-        <!-- Ornamen barcode ala tiket/label cetak -->
-        <div class="barcode" aria-hidden="true"><i></i><span>RZ — 2026 — BACKEND DEV</span></div>
-        <i class="orn-dots" aria-hidden="true"></i>
-      </aside>
+      </section>
 
       <!-- Skill: tabel periodik teknologi + soft skill -->
-      <section id="skill" class="slide page sec span-8 skill-slide">
+      <section id="skill" class="slide page sec skill-slide">
         <header class="sec-head split" data-reveal>
           <div><span class="eyebrow">Keahlian</span><h2 class="slide-title">Tech Stack</h2></div>
           <ul class="legend" id="skillLegend" aria-label="Keterangan warna"></ul>
         </header>
-        <ul class="tiles" id="skillTiles"></ul>
+        <div class="skill-grid">
+          <ul class="tiles" id="skillTiles"></ul>
+          <div class="soft">
+            <h3 class="soft-title" data-reveal>Soft Skill</h3>
+            <ul class="soft-list" id="softList"></ul>
+            <span class="ring-badge soft-ring" aria-hidden="true">
+              <svg viewBox="0 0 120 120"><defs><path id="ringSoft" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs>
+                <text><textPath href="#ringSoft" textLength="287" lengthAdjust="spacing">TEAM PLAYER ✦ FAST LEARNER ✦ PROBLEM SOLVER ✦</textPath></text></svg>
+              <svg class="ic" aria-hidden="true"><use href="#o-spark"/></svg>
+            </span>
+          </div>
+        </div>
       </section>
 
-      <aside class="slide page span-4 soft" aria-labelledby="softTitle">
-        <h3 class="slide-title sm" id="softTitle" data-reveal>Soft Skill</h3>
-        <ul class="soft-list" id="softList"></ul>
-        <span class="ring-badge soft-ring" aria-hidden="true">
-          <svg viewBox="0 0 120 120"><defs><path id="ringSoft" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs>
-            <text><textPath href="#ringSoft" textLength="287" lengthAdjust="spacing">TEAM PLAYER ✦ FAST LEARNER ✦ PROBLEM SOLVER ✦</textPath></text></svg>
-          <svg class="ic" aria-hidden="true"><use href="#o-spark"/></svg>
-        </span>
-        <i class="orn-dots alt" aria-hidden="true"></i>
-      </aside>
-
       <!-- Karya: slide pembatas dengan lampu sorot, lalu tiap karya satu slide -->
-      <section id="proyek" class="slide page sec span-4 divider">
+      <section id="proyek" class="slide page sec divider">
         <span class="orn-lamp" aria-hidden="true"><i class="cord"></i><i class="shade"></i><i class="beam"></i></span>
         <svg class="orn-spark sp-b" aria-hidden="true"><use href="#o-spark"/></svg>
         <svg class="orn-spark sp-c" aria-hidden="true"><use href="#o-spark"/></svg>
         <div class="divider-body" data-reveal>
           <span class="eyebrow">Karya</span>
-          <h2 class="slide-title xl">Karya Pilihan</h2>
+          <h2 class="slide-title xxl">Karya Pilihan</h2>
           <p class="sub">Project yang paling mewakili cara saya bekerja, dari backend sampai tampilan.</p>
         </div>
       </section>
       <div class="contents" id="workList"></div>
 
-      <div class="slide page span-12 repos-slide">
+      <div class="slide page repos-slide">
         <header class="sec-head split" data-reveal>
           <div>
             <h3 class="slide-title">Other Projects</h3>
@@ -225,28 +221,30 @@
         <div class="repos" id="repoList" aria-live="polite"><p class="muted">Memuat proyek…</p></div>
       </div>
 
-      <!-- Pengalaman + pendidikan -->
-      <section id="pengalaman" class="slide page sec span-8 exp-slide">
+      <!-- Pengalaman -->
+      <section id="pengalaman" class="slide page sec exp-slide">
         <header class="sec-head" data-reveal><span class="eyebrow">Perjalanan</span><h2 class="slide-title">Internship</h2></header>
         <div id="expList"></div>
       </section>
 
-      <section id="pendidikan" class="slide page sec span-4 edu-slide">
-        <header class="sec-head" data-reveal><span class="eyebrow">Akademik</span><h2 class="slide-title sm">Pendidikan</h2></header>
-        <ol id="eduList" class="timeline"></ol>
+      <!-- Pendidikan + sertifikat dalam satu slide -->
+      <div class="slide page duo">
         <span class="wm" aria-hidden="true">RPL</span>
-      </section>
+        <section id="pendidikan" class="sec edu-col">
+          <header class="sec-head" data-reveal><span class="eyebrow">Akademik</span><h2 class="slide-title">Pendidikan</h2></header>
+          <ol id="eduList" class="timeline"></ol>
+        </section>
+        <!-- Tampil otomatis jika diisi di data.js -->
+        <section id="sertifikat" class="sec cert-col" hidden>
+          <header class="sec-head" data-reveal><span class="eyebrow">Pencapaian</span><h2 class="slide-title">Sertifikat</h2></header>
+          <ul class="tickets" id="certList"></ul>
+          <ul class="tickets" id="awardList"></ul>
+          <span class="stamp" aria-hidden="true"><b>Certified</b><small>✦ Rafi Zaki ✦</small></span>
+        </section>
+      </div>
 
-      <!-- Sertifikat (tampil otomatis jika diisi di data.js) + API -->
-      <section id="sertifikat" class="slide page sec span-4 cert-slide" hidden>
-        <header class="sec-head" data-reveal><span class="eyebrow">Pencapaian</span><h2 class="slide-title sm">Sertifikat</h2></header>
-        <ul class="tickets" id="certList"></ul>
-        <ul class="tickets" id="awardList"></ul>
-        <!-- Stempel bulat -->
-        <span class="stamp" aria-hidden="true"><b>Certified</b><small>✦ Rafi Zaki ✦</small></span>
-      </section>
-
-      <section id="api" class="slide page sec span-8 api-slide">
+      <!-- API -->
+      <section id="api" class="slide page sec api-slide">
         <header class="sec-head" data-reveal>
           <span class="eyebrow">Khusus di sini</span>
           <h2 class="slide-title">Portfolio API</h2>
@@ -270,7 +268,7 @@
       </section>
 
       <!-- Kontak: slide penutup -->
-      <section id="kontak" class="slide page sec span-12 contact-slide">
+      <section id="kontak" class="slide page sec contact-slide">
         <svg class="orn-spark sp-d" aria-hidden="true"><use href="#o-spark"/></svg>
         <svg class="orn-spark sp-e" aria-hidden="true"><use href="#o-spark"/></svg>
         <div class="contact-main" data-reveal>
@@ -288,7 +286,6 @@
         </div>
         <ul class="contacts" id="contactList"></ul>
       </section>
-    </div>
     </div>
   </main>
 

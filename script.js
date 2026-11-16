@@ -167,7 +167,7 @@ safe("skill", () => {
 });
 
 safe("karya", () => {
-  // Karya pertama di sebelah slide pembatas (8 kolom), sisanya berpasangan (6 kolom).
+  // Setiap karya satu slide layar penuh; sisi gambar bergantian kiri/kanan.
   const host = (u = "") => { try { return new URL(u).host.replace(/^www\./, ""); } catch (e) { return "localhost"; } };
   $("workList").innerHTML = arr(D.karya).map((k, i) => {
     const main = k.demo || k.kode;
@@ -179,11 +179,11 @@ safe("karya", () => {
       k.demo ? `<a class="btn primary sm" href="${esc(safeUrl(k.demo))}" ${ext(k.demo)}><span>Coba ${esc(k.judul)}</span>${ic("arrow-up-right")}</a>` : "",
       k.kode ? `<a class="btn ghost sm" href="${esc(safeUrl(k.kode))}" ${ext(k.kode)}>${ic("github")}<span>Kode</span></a>` : "",
     ].join("");
-    const lead = i === 0;
-    return `<article class="slide page work ${lead ? "span-8 lead-work" : "span-6"}">
+    return `<article class="slide page work${i % 2 ? " flip" : ""}">
+      <span class="wm" aria-hidden="true">${two(i + 1)}</span>
       <div class="mock" data-reveal>
         <div class="browser"><div class="win-bar" aria-hidden="true"><i></i><i></i><i></i><span>${esc(host(main))}</span></div>${shot}</div>
-        ${lead ? '<i class="plinth" aria-hidden="true"></i>' : ""}
+        <i class="plinth" aria-hidden="true"></i>
       </div>
       <div class="work-text" data-reveal style="--i:1">
         <span class="work-kind">${two(i + 1)} — ${esc(k.jenis)}</span>
@@ -347,7 +347,7 @@ const repoCard = (x, i) => {
     setCount($("statRepo"), repos.length);
     const rank = (x) => { const i = arr(D.repoUnggulan).indexOf(x.name); return i === -1 ? 999 : i; };
     repos.sort((a, b) => rank(a) - rank(b) || new Date(b.pushed_at) - new Date(a.pushed_at));
-    repos = repos.slice(0, 9);
+    repos = repos.slice(0, 6);
     if (!repos.length) { box.innerHTML = '<div class="empty">Belum ada repo publik.</div>'; return; }
     box.innerHTML = repos.map(repoCard).join("");
     observeReveals(box);

@@ -1,6 +1,6 @@
 /* ===========================================================
    Portofolio · Muhamad Rafi Zaki
-   Render data, animasi scroll, efek kursor, tema gelap/terang.
+   Render data, animasi scroll, tema gelap/terang.
    Isi konten diedit di data.js.
    =========================================================== */
 "use strict";
@@ -19,7 +19,6 @@ const safe = (label, fn) => { try { fn(); } catch (err) { console.error(`[portof
 
 const root = document.documentElement;
 const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-const finePointer = matchMedia("(hover: hover) and (pointer: fine)").matches;
 const D = typeof DATA !== "undefined" ? DATA : {};
 
 /* ---------- Pembuka → mulai animasi hero ---------- */
@@ -52,27 +51,6 @@ function observeReveals(scope = document) {
   qsa("[data-reveal]:not(.in)", scope).forEach((el) => (revealIO ? revealIO.observe(el) : el.classList.add("in")));
 }
 
-// Sorot kursor (--mx/--my) dan kemiringan 3D (--rx/--ry) pada kartu
-function bindCards(scope = document) {
-  qsa("[data-tilt], [data-spot]", scope).forEach((el) => {
-    if (el._bound) return;
-    el._bound = true;
-    const tilt = el.hasAttribute("data-tilt") && finePointer && !reduce;
-    el.addEventListener("pointermove", (e) => {
-      const r = el.getBoundingClientRect();
-      const x = e.clientX - r.left;
-      const y = e.clientY - r.top;
-      el.style.setProperty("--mx", `${x}px`);
-      el.style.setProperty("--my", `${y}px`);
-      if (tilt) {
-        el.style.setProperty("--ry", `${((x / r.width - 0.5) * 9).toFixed(2)}deg`);
-        el.style.setProperty("--rx", `${((0.5 - y / r.height) * 9).toFixed(2)}deg`);
-      }
-    });
-    el.addEventListener("pointerleave", () => { el.style.removeProperty("--rx"); el.style.removeProperty("--ry"); });
-  });
-}
-
 function countUp(el, to, dur = 1500) {
   if (reduce) { el.textContent = to; return; }
   const t0 = performance.now();
@@ -96,37 +74,13 @@ const counterIO = "IntersectionObserver" in window
   : null;
 function setCount(el, n) { el.dataset.count = n; if (el._seen || !counterIO) countUp(el, n); }
 
-let toastTimer;
-function toast(msg, ok = true) {
-  const t = $("toast");
-  if (!t) return;
-  t.innerHTML = `${ic(ok ? "check" : "x")}<span>${esc(msg)}</span>`;
-  t.classList.add("show");
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => t.classList.remove("show"), 2400);
-}
-async function copyText(text) {
-  try { await navigator.clipboard.writeText(text); return true; } catch (e) { /* lanjut ke cara lama */ }
-  try {
-    const ta = document.createElement("textarea");
-    ta.value = text;
-    ta.setAttribute("readonly", "");
-    ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
-    document.body.appendChild(ta);
-    ta.select();
-    const ok = document.execCommand("copy");
-    ta.remove();
-    return ok;
-  } catch (e) { return false; }
-}
-
 /* ---------- Tema gelap / terang ---------- */
 safe("tema", () => {
   const btn = $("themeBtn");
   const meta = qs('meta[name="theme-color"]');
   const paint = (t) => {
     root.setAttribute("data-theme", t);
-    if (meta) meta.content = t === "light" ? "#f3f6fd" : "#050b1a";
+    if (meta) meta.content = t === "light" ? "#e6e5df" : "#0a1317";
     btn.setAttribute("aria-label", t === "dark" ? "Ganti ke tema terang" : "Ganti ke tema gelap");
   };
   paint(root.getAttribute("data-theme") === "light" ? "light" : "dark");
@@ -169,11 +123,12 @@ safe("sosial", () => {
     `<a class="soc" href="${esc(safeUrl(href))}" aria-label="${label}" title="${label}" ${ext(href)}>${ic(i)}</a>`).join("");
 });
 
-safe("marquee", () => {
-  const techs = arr(D.skill).filter((g) => !/soft/i.test(g.grup)).flatMap((g) => arr(g.item));
-  if (!techs.length) { qs(".marquee").hidden = true; return; }
-  const half = [...techs, ...techs].map((t) => `<span>${esc(t)}</span>`).join("");
-  $("track").innerHTML = half + half;
+safe("perkenalan", () => {
+  // Isi slide "Introduction": kontak singkat dan sekolah saat ini
+  const lines = [D.email, D.telepon, D.lokasi].filter(Boolean).map(esc);
+  $("introContact").innerHTML = lines.join("<br>");
+  const sekolah = arr(D.pendidikan)[0];
+  if (sekolah) $("introEdu").innerHTML = `${esc(sekolah.nama)}${sekolah.detail ? `<br>${esc(sekolah.detail.split(",")[0])}` : ""}`;
 });
 
 safe("pills", () => {
@@ -183,19 +138,37 @@ safe("pills", () => {
   $("aboutPills").innerHTML = loc + hobi;
 });
 
+const two = (n) => String(n).padStart(2, "0");
+
+/* Singkatan ala tabel periodik untuk ubin teknologi */
+const ABBR = [[/laravel/i, "Lv"], [/spring/i, "Sb"], [/rest/i, "Ra"], [/mysql/i, "My"], [/typescript/i, "Ts"], [/react/i, "Re"],
+  [/javascript/i, "Js"], [/html/i, "Ht"], [/css/i, "Cs"], [/gitlab/i, "Gl"], [/github/i, "Gh"], [/laragon/i, "Lg"]];
+const abbr = (name = "") => {
+  const hit = ABBR.find(([re]) => re.test(name));
+  if (hit) return hit[1];
+  const base = (name.match(/\(([^)]+)\)/) || [null, name])[1].replace(/[^A-Za-z ]/g, "");
+  const caps = base.match(/[A-Z]/g) || [];
+  return caps.length > 1 ? caps[0] + caps[1].toLowerCase() : base.slice(0, 2).replace(/^./, (c) => c.toUpperCase());
+};
+
 safe("skill", () => {
-  const ICONS = [[/back/i, "server"], [/front/i, "layout"], [/tool/i, "tool"], [/soft|tim|sikap/i, "users"]];
-  const iconFor = (name = "") => (ICONS.find(([re]) => re.test(name)) || [null, "code"])[1];
-  $("skillList").innerHTML = arr(D.skill).map((g, i) => `
-    <article class="card fx" data-tilt data-reveal style="--i:${Math.min(i, 5)}">
-      <div class="card-top"><span class="icon-box">${ic(iconFor(g.grup))}</span><span class="count">${String(arr(g.item).length).padStart(2, "0")}</span></div>
-      <h3>${esc(g.grup)}</h3>
-      <div class="tags">${arr(g.item).map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>
-    </article>`).join("");
+  const grup = arr(D.skill);
+  const tech = grup.filter((g) => !/soft/i.test(g.grup));
+  const soft = grup.filter((g) => /soft/i.test(g.grup)).flatMap((g) => arr(g.item));
+  // Tiap grup punya warna ubin sendiri (t0, t1, t2), seperti kolase warna di slide referensi
+  $("skillLegend").innerHTML = tech.map((g, i) => `<li><i class="sw t${i % 3}"></i>${esc(g.grup)}</li>`).join("");
+  let n = 0;
+  $("skillTiles").innerHTML = tech.flatMap((g, gi) => arr(g.item).map((t) => {
+    n += 1;
+    const label = String(t).replace(/\s*\(([^)]+)\)/, " · $1");
+    return `<li class="tile t${gi % 3}" data-reveal style="--i:${n % 6}"><span class="tile-no">${two(n)}</span><b aria-hidden="true">${esc(abbr(t))}</b><span class="tile-name">${esc(label)}</span></li>`;
+  })).join("");
+  $("softList").innerHTML = soft.map((t, i) => `<li data-reveal style="--i:${i}"><svg class="ic" aria-hidden="true"><use href="#o-spark"/></svg>${esc(t)}</li>`).join("");
 });
 
 safe("karya", () => {
-  // Karya pilihan: gambar besar + deskripsi. Karya pertama tampil paling lebar.
+  // Karya pertama di sebelah slide pembatas (8 kolom), sisanya berpasangan (6 kolom).
+  const host = (u = "") => { try { return new URL(u).host.replace(/^www\./, ""); } catch (e) { return "localhost"; } };
   $("workList").innerHTML = arr(D.karya).map((k, i) => {
     const main = k.demo || k.kode;
     const img = `<img src="${esc(k.gambar)}" alt="Tampilan ${esc(k.judul)}" width="1200" height="750" loading="lazy" decoding="async">`;
@@ -204,15 +177,19 @@ safe("karya", () => {
       : `<div class="shot">${img}</div>`;
     const actions = [
       k.demo ? `<a class="btn primary sm" href="${esc(safeUrl(k.demo))}" ${ext(k.demo)}><span>Coba ${esc(k.judul)}</span>${ic("arrow-up-right")}</a>` : "",
-      k.kode ? `<a class="btn ghost sm" href="${esc(safeUrl(k.kode))}" ${ext(k.kode)}>${ic("github")}<span>Kode di GitHub</span></a>` : "",
+      k.kode ? `<a class="btn ghost sm" href="${esc(safeUrl(k.kode))}" ${ext(k.kode)}>${ic("github")}<span>Kode</span></a>` : "",
     ].join("");
-    return `<article class="work fx${i === 0 ? " lead-work" : ""}" data-spot data-reveal style="--i:${Math.min(i, 3)}">
-      ${shot}
-      <div class="work-body">
-        <span class="work-kind">${esc(k.jenis)}</span>
+    const lead = i === 0;
+    return `<article class="slide page work ${lead ? "span-8 lead-work" : "span-6"}">
+      <div class="mock" data-reveal>
+        <div class="browser"><div class="win-bar" aria-hidden="true"><i></i><i></i><i></i><span>${esc(host(main))}</span></div>${shot}</div>
+        ${lead ? '<i class="plinth" aria-hidden="true"></i>' : ""}
+      </div>
+      <div class="work-text" data-reveal style="--i:1">
+        <span class="work-kind">${two(i + 1)} — ${esc(k.jenis)}</span>
         <h3>${esc(k.judul)}</h3>
         <p>${esc(k.deskripsi)}</p>
-        <div class="tags">${arr(k.teknologi).map((t) => `<span class="tag">${esc(t)}</span>`).join("")}</div>
+        <ul class="tags">${arr(k.teknologi).map((t) => `<li class="tag">${esc(t)}</li>`).join("")}</ul>
         ${actions ? `<div class="work-actions">${actions}</div>` : ""}
       </div>
     </article>`;
@@ -220,24 +197,32 @@ safe("karya", () => {
 });
 
 safe("pengalaman", () => {
-  $("expList").innerHTML = arr(D.pengalaman).map((e) => `
-    <article class="exp fx" data-spot data-reveal>
-      <div class="exp-head">
-        <div class="exp-title"><span class="icon-box">${ic("briefcase")}</span>
-          <div><h3>${esc(e.posisi)}</h3><p class="org">${esc(e.instansi)}</p></div></div>
+  $("expList").innerHTML = arr(D.pengalaman).map((e, i) => {
+    const ringId = `expRing${i}`;
+    const ring = `${e.instansi} ✦ ${e.periode} ✦`.toUpperCase();
+    return `<article class="exp">
+      <div class="exp-side" data-reveal>
+        <span class="ring-badge static" aria-hidden="true">
+          <svg viewBox="0 0 120 120"><defs><path id="${ringId}" d="M60 60m-46 0a46 46 0 1 1 92 0a46 46 0 1 1-92 0"/></defs>
+            <text><textPath href="#${ringId}" textLength="287" lengthAdjust="spacingAndGlyphs">${esc(ring)}</textPath></text></svg>
+          ${ic("briefcase")}
+        </span>
+        <h3>${esc(e.posisi)}</h3>
+        <p class="org">${esc(e.instansi)}</p>
         <span class="period">${esc(e.periode)}</span>
       </div>
-      <ul>${arr(e.poin).map((p, j) => `<li data-reveal style="--i:${Math.min(j, 5)}">${ic("check-circle")}<span>${esc(p)}</span></li>`).join("")}</ul>
-    </article>`).join("");
+      <ol class="exp-points">${arr(e.poin).map((p, j) => `<li data-reveal style="--i:${Math.min(j, 5)}">${esc(p)}</li>`).join("")}</ol>
+    </article>`;
+  }).join("");
 });
 
 safe("pendidikan", () => {
   $("eduList").innerHTML = arr(D.pendidikan).map((e, i) => `
-    <div class="tl-item" data-reveal style="--i:${Math.min(i, 5)}">
-      <span class="period">${esc(e.periode)}</span>
+    <li class="tl-item${i === 0 ? " now" : ""}" data-reveal style="--i:${Math.min(i, 5)}">
+      <span class="when">${esc(e.periode)}</span>
       <h3>${esc(e.nama)}</h3>
       ${e.detail ? `<p>${esc(e.detail)}</p>` : ""}
-    </div>`).join("");
+    </li>`).join("");
 });
 
 // Entri contoh yang judulnya masih diawali "Nama ..." tidak ditampilkan
@@ -248,18 +233,15 @@ safe("sertifikat", () => {
   if (!certs.length && !awards.length) return;
   $("sertifikat").hidden = false;
   $("navCert").hidden = false;
-  $("certList").innerHTML = certs.map((c, i) => {
-    const body = `<div class="card-top"><span class="icon-box">${ic("award")}</span>${c.link ? `<span class="go">${ic("arrow-up-right")}</span>` : ""}</div>
-      <h3>${esc(c.judul)}</h3><p>${[c.penerbit, c.tahun].filter(Boolean).map(esc).join(" · ")}</p>`;
-    return c.link
-      ? `<a class="card fx repo" data-tilt data-reveal style="--i:${Math.min(i, 5)}" href="${esc(safeUrl(c.link))}" ${ext(c.link)}>${body}</a>`
-      : `<div class="card fx" data-tilt data-reveal style="--i:${Math.min(i, 5)}">${body}</div>`;
-  }).join("");
-  $("awardList").innerHTML = awards.map((a, i) => `
-    <div class="card fx" data-tilt data-reveal style="--i:${Math.min(i, 5)}">
-      <div class="card-top"><span class="icon-box">${ic("star")}</span></div>
-      <h3>${esc(a.judul)}</h3><p>${esc(a.detail)} · ${esc(a.tahun)}</p>
-    </div>`).join("");
+  // Tiap sertifikat tampil sebagai tiket berlubang
+  const item = (icon, title, sub, year, link, i) => {
+    const body = `<span class="tk-main"><b>${esc(title)}</b><small>${sub}</small></span><span class="tk-stub">${ic(icon)}<em>${esc(year || "—")}</em></span>`;
+    return `<li data-reveal style="--i:${Math.min(i, 5)}">${link
+      ? `<a class="ticket" href="${esc(safeUrl(link))}" ${ext(link)}>${body}</a>`
+      : `<div class="ticket">${body}</div>`}</li>`;
+  };
+  $("certList").innerHTML = certs.map((c, i) => item("award", c.judul, esc(c.penerbit || ""), c.tahun, c.link, i)).join("");
+  $("awardList").innerHTML = awards.map((a, i) => item("star", a.judul, esc(a.detail || ""), a.tahun, "", i)).join("");
 });
 
 safe("kontak", () => {
@@ -271,17 +253,27 @@ safe("kontak", () => {
     ["instagram", "Instagram", D.instagram, handle(D.instagram)],
     ["phone", "Telepon", D.telepon ? `tel:${String(D.telepon).replace(/[\s-]/g, "")}` : "", D.telepon],
   ].filter(([, , href, val]) => href && val);
+  // Ikon kontak memakai ornamen bulat yang sama dengan tombol sosmed
   $("contactList").innerHTML = items.map(([icon, label, href, val], i) => `
-    <a class="card fx contact" data-tilt data-reveal style="--i:${i}" href="${esc(safeUrl(href))}" ${ext(href)}>
-      <span class="icon-box">${ic(icon)}</span>
-      <span><small>${label}</small><b>${esc(val)}</b></span>
-      <span class="go">${ic("arrow-up-right")}</span>
-    </a>`).join("");
+    <li data-reveal style="--i:${i}"><a class="contact" href="${esc(safeUrl(href))}" ${ext(href)}>
+      <span class="soc" aria-hidden="true">${ic(icon)}</span>
+      <span class="contact-txt"><small>${label}</small><b>${esc(val)}</b></span>
+      ${ic("arrow-up-right", "go")}
+    </a></li>`).join("");
+  if (D.email) {
+    $("mailLink").href = `mailto:${D.email}`;
+    $("mailLink").textContent = D.email;
+    $("mailRing").href = `mailto:${D.email}`;
+  }
+});
 
-  if (D.email) $("mailLink").href = `mailto:${D.email}`;
-  $("copyMail")?.addEventListener("click", async () => {
-    const ok = await copyText(D.email || "");
-    toast(ok ? "Alamat email disalin" : "Gagal menyalin, salin manual ya", ok);
+safe("nomor-halaman", () => {
+  // Kaki slide ala deck presentasi: nama di kiri, nomor halaman di kanan.
+  // Sampul dihitung sebagai halaman 01, jadi slide pertama di bawahnya halaman 02.
+  const pages = qsa("main .page").filter((p) => !p.hidden);
+  const year = new Date().getFullYear();
+  pages.forEach((p, i) => {
+    p.insertAdjacentHTML("beforeend", `<footer class="folio" aria-hidden="true"><span>${esc(D.nama || "")} — Portfolio ${year}</span><span>${two(i + 2)} / ${two(pages.length + 1)}</span></footer>`);
   });
 });
 
@@ -337,9 +329,9 @@ const repoCard = (x, i) => {
   const topics = arr(x.topics).slice(0, x.language ? 3 : 4).map((t) => `<span class="tag">${esc(t)}</span>`).join("");
   const when = new Date(x.pushed_at).toLocaleDateString("id-ID", { month: "short", year: "numeric" });
   return `
-    <a class="card fx repo" data-tilt data-reveal style="--i:${Math.min(i, 5)}" href="${esc(safeUrl(href))}" target="_blank" rel="noopener">
-      <div class="card-top"><span class="icon-box">${ic("folder")}</span><span class="go">${ic("arrow-up-right")}</span></div>
-      <h3>${esc(x.name)}</h3>
+    <a class="repo" data-reveal style="--i:${i % 3}" href="${esc(safeUrl(href))}" target="_blank" rel="noopener">
+      <div class="repo-top"><span class="repo-no">${two(i + 1)}</span>${ic("arrow-up-right", "go")}</div>
+      <h4>${esc(x.name)}</h4>
       <p class="desc">${esc(x.description || "Tanpa deskripsi")}</p>
       <div class="tags">${lang}${topics}</div>
       <div class="meta"><span>${ic("star")}${Number(x.stargazers_count) || 0}</span><span>Update ${esc(when)}</span></div>
@@ -358,7 +350,6 @@ const repoCard = (x, i) => {
     repos = repos.slice(0, 9);
     if (!repos.length) { box.innerHTML = '<div class="empty">Belum ada repo publik.</div>'; return; }
     box.innerHTML = repos.map(repoCard).join("");
-    bindCards(box);
     observeReveals(box);
   } catch (e) {
     box.innerHTML = `<div class="empty">Proyek belum bisa dimuat. Lihat langsung di <a href="https://github.com/${esc(D.githubUser)}" target="_blank" rel="noopener">GitHub</a>.</div>`;
@@ -369,8 +360,12 @@ const repoCard = (x, i) => {
 safe("menu", () => {
   const menu = $("menu");
   const burger = $("burger");
-  $("menuLinks").innerHTML = qsa("#links a:not([hidden])").map((a, i) =>
-    `<a href="${esc(a.getAttribute("href"))}" style="--i:${i}"><span class="n">${String(i + 1).padStart(2, "0")}</span>${esc(a.textContent)}</a>`).join("");
+  const navLinks = qsa("#links a:not([hidden])");
+  $("menuLinks").innerHTML = navLinks.map((a, i) =>
+    `<a href="${esc(a.getAttribute("href"))}" style="--i:${i}"><span class="n">${two(i + 1)}</span>${esc(a.textContent)}</a>`).join("");
+  // Slide "Content": nomornya dari CSS counter, sama seperti nomor di judul tiap seksi
+  $("tocList").innerHTML = navLinks.map((a) =>
+    `<li><a href="${esc(a.getAttribute("href"))}"><b aria-hidden="true"></b><span>${esc(a.textContent)}</span></a></li>`).join("");
   const set = (open) => {
     menu.classList.toggle("open", open);
     menu.inert = !open;
@@ -401,7 +396,6 @@ safe("scroll-spy", () => {
 safe("scroll", () => {
   const bar = $("progress");
   const top = $("totop");
-  const timelines = qsa(".timeline");
   let ticking = false;
   const update = () => {
     ticking = false;
@@ -410,11 +404,6 @@ safe("scroll", () => {
     bar.style.transform = `scaleX(${p})`;
     top.style.setProperty("--p", p.toFixed(3));
     top.classList.toggle("show", scrollY > 700);
-    timelines.forEach((tl) => {
-      const r = tl.getBoundingClientRect();
-      tl.style.setProperty("--p", clamp((innerHeight * 0.62 - r.top) / r.height, 0, 1).toFixed(3));
-      qsa(".tl-item", tl).forEach((it) => it.classList.toggle("lit", it.getBoundingClientRect().top + 38 < innerHeight * 0.62));
-    });
   };
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
   addEventListener("resize", update);
@@ -432,52 +421,6 @@ safe("cv", () => {
   qsa("[data-close-cv]").forEach((b) => b.addEventListener("click", () => dlg.close()));
   dlg.addEventListener("click", (e) => { if (e.target === dlg) dlg.close(); });
   dlg.addEventListener("close", () => document.body.classList.remove("lock"));
-});
-
-/* ---------- Efek khusus perangkat dengan mouse ---------- */
-safe("kursor", () => {
-  const spot = $("spot");
-  if (!finePointer || reduce) return;
-  let x = 0, y = 0, raf = 0;
-  addEventListener("pointermove", (e) => {
-    x = e.clientX; y = e.clientY;
-    spot.classList.add("on");
-    if (!raf) raf = requestAnimationFrame(() => { raf = 0; spot.style.setProperty("--mx", `${x}px`); spot.style.setProperty("--my", `${y}px`); });
-  }, { passive: true });
-  root.addEventListener("mouseleave", () => spot.classList.remove("on"));
-});
-
-safe("parallax-hero", () => {
-  if (!finePointer || reduce) return;
-  const hero = qs(".hero");
-  const vis = $("heroVisual");
-  let tx = 0, ty = 0, cx = 0, cy = 0, running = false;
-  const loop = () => {
-    cx += (tx - cx) * 0.08;
-    cy += (ty - cy) * 0.08;
-    vis.style.setProperty("--px", cx.toFixed(3));
-    vis.style.setProperty("--py", cy.toFixed(3));
-    if (Math.abs(tx - cx) > 0.001 || Math.abs(ty - cy) > 0.001) requestAnimationFrame(loop); else running = false;
-  };
-  const kick = () => { if (!running) { running = true; requestAnimationFrame(loop); } };
-  hero.addEventListener("pointermove", (e) => {
-    const r = hero.getBoundingClientRect();
-    tx = ((e.clientX - r.left) / r.width) * 2 - 1;
-    ty = ((e.clientY - r.top) / r.height) * 2 - 1;
-    kick();
-  });
-  hero.addEventListener("pointerleave", () => { tx = ty = 0; kick(); });
-});
-
-safe("magnetik", () => {
-  if (!finePointer || reduce) return;
-  qsa(".magnetic").forEach((b) => {
-    b.addEventListener("pointermove", (e) => {
-      const r = b.getBoundingClientRect();
-      b.style.transform = `translate(${((e.clientX - r.left - r.width / 2) * 0.22).toFixed(1)}px, ${((e.clientY - r.top - r.height / 2) * 0.32).toFixed(1)}px)`;
-    });
-    b.addEventListener("pointerleave", () => { b.style.transform = ""; });
-  });
 });
 
 /* ---------- Aktifkan animasi untuk semua elemen yang sudah dirender ---------- */
@@ -522,5 +465,4 @@ safe("api", () => {
   send("/api/profil");
 });
 
-bindCards();
 observeReveals();

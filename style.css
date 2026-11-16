@@ -549,7 +549,8 @@ a.shot:hover img { transform: scale(1.04); }
   .cover-foot { flex-direction: column; align-items: stretch; margin-top: 18px; }
   .cover-cta, .socials { max-width: none; }
   .cover .cta { flex-direction: row; }
-  .socials { justify-content: flex-start; }
+  /* Di HP sosmed kembali satu baris (aturan 2x2 hanya untuk sampul ukuran menengah) */
+  .socials { display: flex; justify-content: flex-start; }
 }
 
 /* ---------- Gerak ornamen ---------- */

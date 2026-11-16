@@ -273,7 +273,7 @@ safe("nomor-halaman", () => {
   const pages = qsa("main .page").filter((p) => !p.hidden);
   const year = new Date().getFullYear();
   pages.forEach((p, i) => {
-    p.insertAdjacentHTML("beforeend", `<footer class="folio" aria-hidden="true"><span>${esc(D.nama || "")} — Portfolio ${year}</span><span>${two(i + 2)} / ${two(pages.length + 1)}</span></footer>`);
+    p.insertAdjacentHTML("beforeend", `<footer class="folio" aria-hidden="true"><span>${esc(D.nama || "")} — Portofolio ${year}</span><span>${two(i + 2)} / ${two(pages.length + 1)}</span></footer>`);
   });
 });
 

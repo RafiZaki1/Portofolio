@@ -29,6 +29,7 @@
     })();
   </script>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="techwheel.css">
 </head>
 <body>
   <!-- Sprite ikon (gaya Feather) -->
@@ -101,12 +102,12 @@
         </div>
 
         <div class="cover-stage">
+          <img class="cutout" data-intro style="--i:3" src="assets/foto-formal.png" alt="Muhamad Rafi Zaki berkemeja hitam, berdiri dengan tangan di saku" width="760" height="1013" fetchpriority="high" decoding="async">
           <p class="cover-title" aria-label="Portofolio, Backend Developer">
             <span class="ct-l" aria-hidden="true"><span class="word" style="--i:1">PORTO</span><small data-intro style="--i:4">Backend</small></span>
             <span class="ct-gap" aria-hidden="true"></span>
             <span class="ct-r" aria-hidden="true"><span class="word" style="--i:2">FOLIO</span><small data-intro style="--i:5">Developer</small></span>
           </p>
-          <img class="cutout" data-intro style="--i:3" src="assets/foto-formal.png" alt="Muhamad Rafi Zaki berkemeja hitam, berdiri dengan tangan di saku" width="760" height="1013" fetchpriority="high" decoding="async">
         </div>
 
         <div class="cover-foot" data-intro style="--i:6">
@@ -119,6 +120,18 @@
           <div class="socials" id="heroSocials"></div>
         </div>
       </section>
+
+    <!-- ===== Tech stack: roda logo yang berputar, tampil tepat setelah sampul ===== -->
+    <section id="tech-wheel" class="slide page sec wheel-slide">
+      <header class="sec-head split" data-reveal>
+        <div><span class="eyebrow">Tech Stack</span><h2 class="slide-title">Yang Saya Pelajari</h2></div>
+        <p class="wheel-hint">Bahasa, framework, dan database yang saya pelajari dan pakai untuk membangun aplikasi. Arahkan kursor ke roda untuk menghentikannya.</p>
+      </header>
+      <div class="tw-stage" data-reveal>
+        <div class="tw-core"><span>Tech</span><b>Stack</b><small>yang saya kuasai</small></div>
+        <ul class="tw-ring" id="techWheel" aria-label="Daftar tech stack"></ul>
+      </div>
+    </section>
 
     <!-- ===== Deck: setiap .page adalah satu slide layar penuh, berurutan seperti presentasi ===== -->
     <div class="deck">
@@ -140,8 +153,8 @@
 
       <!-- Content: daftar isi -->
       <nav class="slide page toc" aria-labelledby="tocTitle">
-        <i class="orn-dots d-1" aria-hidden="true"></i>
-        <i class="orn-dots d-2" aria-hidden="true"></i>
+        <svg class="orn-spark toc-sp-1" aria-hidden="true"><use href="#o-spark"/></svg>
+        <svg class="orn-spark toc-sp-2" aria-hidden="true"><use href="#o-spark"/></svg>
         <h2 class="slide-title xxl" id="tocTitle" data-reveal>Content</h2>
         <ol class="toc-list" id="tocList" data-reveal style="--i:1"></ol>
       </nav>
@@ -150,7 +163,6 @@
       <section id="tentang" class="slide page sec about-slide">
         <div class="about">
           <figure class="polaroid" data-reveal>
-            <i class="tape tape-l" aria-hidden="true"></i><i class="tape tape-r" aria-hidden="true"></i>
             <div class="polaroid-img"><img src="assets/foto-about.png" alt="Muhamad Rafi Zaki berjaket krem dan kaos putih, bersedekap sambil tersenyum" width="877" height="999" loading="lazy" decoding="async"></div>
             <figcaption>Siap belajar, siap kerja sama</figcaption>
           </figure>
@@ -291,8 +303,14 @@
 
   <footer class="foot">
     <div class="wrap">
-      <span>© <span id="year"></span> Muhamad Rafi Zaki. Dibuat dengan kode dan secangkir kopi.</span>
-      <span class="foot-loc"><svg class="ic" aria-hidden="true"><use href="#i-map-pin"/></svg><span id="footLoc">Mojokerto, Jawa Timur</span></span>
+      <div class="foot-brand">
+        <span class="foot-name">Muhamad Rafi Zaki</span>
+        <span class="foot-role">
+          <span>Backend Developer</span>
+          <span class="foot-loc"><svg class="ic" aria-hidden="true"><use href="#i-map-pin"/></svg><span id="footLoc">Mojokerto, Jawa Timur</span></span>
+        </span>
+      </div>
+      <span class="foot-copy">© <span id="year"></span> · Dibuat oleh Muhamad Rafi Zaki</span>
     </div>
   </footer>
 
@@ -319,5 +337,6 @@
 
   <script src="data.js"></script>
   <script src="script.js"></script>
+  <script src="techwheel.js"></script>
 </body>
 </html>

@@ -257,7 +257,6 @@ button { font: inherit; color: inherit; }
 .folio span:first-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
 .orn-spark { position: absolute; z-index: 0; width: 20px; height: 20px; fill: var(--cream); pointer-events: none; animation: twinkle 3.4s ease-in-out infinite; }
-.orn-dots { position: absolute; z-index: 0; width: 90px; height: 50px; pointer-events: none; background: radial-gradient(circle, rgba(239, 231, 204, .5) 1.3px, transparent 1.8px) 0 0 / 10px 10px; }
 .slide-title.xxl { font-size: clamp(4rem, 12vw, 10rem); line-height: .85; }
 .sec-head { margin-bottom: clamp(28px, 5vh, 52px); }
 
@@ -289,7 +288,7 @@ a.ring-badge:hover > .ic { transform: translate(3px, -3px); }
 .facts div { display: grid; align-content: start; gap: 6px; }
 .facts dt { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; letter-spacing: .14em; text-transform: uppercase; color: var(--cream); }
 .facts dd { margin: 0; font-size: .88rem; line-height: 1.55; color: var(--ink-dim); overflow-wrap: anywhere; }
-.intro .sp-1 { top: 18%; right: 9%; width: 26px; height: 26px; }
+.intro .sp-1 { top: 8%; left: 50%; width: 26px; height: 26px; }
 
 /* ---------- Content (daftar isi) ---------- */
 .toc { align-items: center; text-align: center; gap: clamp(32px, 7vh, 72px); }
@@ -480,6 +479,8 @@ a.shot:hover img { transform: scale(1.04); }
 .mail-big:hover { text-decoration-color: var(--cream); }
 .contact-slide .sp-d { top: 20%; left: 50%; width: 28px; height: 28px; }
 .contact-slide .sp-e { bottom: 18%; left: 46%; width: 14px; height: 14px; animation-delay: -1.2s; }
+.toc .toc-sp-1 { top: 14%; right: 10%; width: 26px; height: 26px; }
+.toc .toc-sp-2 { bottom: 16%; left: 8%; width: 16px; height: 16px; animation-delay: -1.6s; }
 .contacts { position: relative; z-index: 1; display: grid; margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
 .contact { display: flex; align-items: center; gap: 16px; padding: 14px 4px; border-bottom: 1px solid var(--line); transition: padding .4s var(--ease); }
 .contact:hover { padding-left: 10px; }
@@ -492,10 +493,15 @@ a.shot:hover img { transform: scale(1.04); }
 .contact:hover .go { transform: translate(3px, -3px); color: var(--cream); }
 
 /* ---------- Footer & tombol atas ---------- */
-.foot { margin-top: clamp(36px, 5vw, 56px); padding: 22px 0 40px; font-size: .88rem; color: var(--wall-muted); }
-.foot .wrap { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; }
-.foot-loc { display: inline-flex; align-items: center; gap: 8px; }
-.foot-loc .ic { width: 16px; height: 16px; color: var(--wall-accent); }
+.foot { margin-top: clamp(36px, 5vw, 56px); padding: 26px 0 34px; border-top: 1px solid var(--line-hi); color: var(--wall-muted); font-size: .9rem; }
+.foot .wrap { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 14px 24px; }
+.foot-brand { display: flex; flex-direction: column; gap: 4px; }
+.foot-name { font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 3vw, 30px); line-height: 1; letter-spacing: .02em; text-transform: uppercase; color: var(--wall-text); }
+.foot-role { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; }
+.foot-loc { display: inline-flex; align-items: center; gap: 6px; }
+.foot-loc .ic { width: 14px; height: 14px; color: var(--wall-accent); }
+.foot-copy { font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em; }
+@media (max-width: 560px) { .foot .wrap { flex-direction: column; align-items: flex-start; padding-right: 72px; } .foot-role { flex-wrap: wrap; } }
 
 .totop { position: fixed; right: clamp(16px, 3vw, 32px); bottom: clamp(16px, 3vw, 32px); z-index: 55; display: grid; place-items: center; width: 52px; height: 52px; padding: 0; border: 0; border-radius: 50%; background: rgba(10, 42, 54, .92); color: var(--cream); cursor: pointer; box-shadow: 0 14px 30px -14px rgba(0, 0, 0, .6); opacity: 0; translate: 0 20px; pointer-events: none; transition: opacity .5s, translate .5s var(--ease), background .3s; }
 .totop.show { opacity: 1; translate: 0 0; pointer-events: auto; }
